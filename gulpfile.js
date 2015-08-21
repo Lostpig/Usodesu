@@ -5,7 +5,7 @@ var babel = require('gulp-babel');
 var del = require('del');
 
 var SRC = 'dev/**.es';
-var DEST = 'src';
+var DEST = 'dist';
 
 gulp.task('transpile', function () {
 	return gulp.src(SRC).
