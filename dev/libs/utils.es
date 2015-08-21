@@ -17,8 +17,7 @@ let warn = (msg) => {
     },
     error = (msg) => {
         msg = stringify(msg);
-        //console.error(`[ERROR] ${msg}`.bold.red);
-        console.log(`custom ERROR: ${msg}`);
+        console.error(`[ERROR] ${msg}`.bold.red);
     };
 
 export { warn, error };

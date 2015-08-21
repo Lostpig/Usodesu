@@ -4,7 +4,8 @@ import libNet from 'net';
 import EventEmitter from 'events';
 import {error} from './utils';
 
-let toRequest = (req) => {
+let
+    toRequest = (req) => {
         return new Promise((resolve, reject) => {
             let reqbody = new Buffer(0);
             req.on('data', (d) => {
