@@ -4,9 +4,14 @@
     <title>Hello World!</title>
 </head>
 <body>
-    <h1>Hello World!</h1>
-    <webview src="http://www.baidu.com" style="height: 480px;width:480px;"></webview>
-    We are using io.js <script>document.write(process.version)</script>
-    and Electron <script>document.write(process.versions['electron'])</script>.
+    <div id="kan">
+        <webview id="wvkan" src="http://www.baidu.com" style="height: 480px;width: 640px;"></webview>
+    </div>
+    <div id="content">
+
+    </div>
+    <script>
+        require(./dist/view/index);
+    </script>
 </body>
 </html>
