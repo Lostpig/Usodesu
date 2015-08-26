@@ -1,14 +1,15 @@
-import libHttp from 'http';
-import libUrl from 'url';
-import libNet from 'net';
-import libFs from 'fs';
-import libPath from 'path';
-import libRequest from 'request';
-import libMime from 'mime';
+import libHttp      from 'http';
+import libUrl       from 'url';
+import libNet       from 'net';
+import libFs        from 'fs';
+import libPath      from 'path';
+import libRequest   from 'request';
+import libMime      from 'mime';
 import EventEmitter from 'events';
-import {error, readAsync, writeAsync} from './utils';
-import config from './config';
-import api from './api';
+import config       from './config';
+import api          from './api';
+
+import {error, log, readAsync, writeAsync} from './utils';
 
 let
     toRequest = (req) => {
@@ -23,18 +24,20 @@ let
                     headers       : req.headers,
                     encoding      : null,
                     followRedirect: false,
-                    proxy         : 'http://127.0.0.1:3213'
+                    proxy         : config.proxy
                 };
                 if (reqbody.length > 0) {
                     option = Object.assign(option, { body: reqbody });
+                    //option['body'] = reqbody;
                 }
 
                 libRequest(option, (err, response, resbody) => {
+                    log(`[response]url:${option}||length:${resbody.length}`);
                     if(err) {
                         reject(err);
                     }
                     else {
-                        resolve(response, resbody);
+                        resolve({response: response, resBody: resbody});
                     }
                 });
             }).on('error', (e) => {
@@ -42,58 +45,65 @@ let
             });
         });
     },
-    processResource = (req, res) => {
-        let url = libUrl.parse(req.url);
-        let path = libPath.join(config.cachefolder, url.pathname);
-        if(libFs.existsSync(path)) {
-            let state = libFs.statSync(path);
-            if(req.headers['if-modified-since'] && (new Date(req.headers['if-modified-since']) >= state.mtime)){
-                res.writeHead(304, {
-                    'Server'       : 'nginx',
-                    'Last-Modified': state.mtime.toGMTString()
-                });
-                res.end();
-            }
-            else {
-                readAsync(path).then((data) => {
+    processResource = async (req, res) => {
+        try{
+            let url = libUrl.parse(req.url);
+            let path = libPath.join(config.cachefolder, url.pathname);
+            if(libFs.existsSync(path)) {
+                let state = libFs.statSync(path);
+                if(req.headers['if-modified-since'] && (new Date(req.headers['if-modified-since']) >= state.mtime)){
+                    res.writeHead(304, {
+                        'Server'       : 'nginx',
+                        'Last-Modified': state.mtime.toGMTString()
+                    });
+                    res.end();
+                }
+                else {
+                    let data = await readAsync(path);
                     res.writeHead(200, {
-                        'Server'        : 'Apache',
+                        'Server'        : 'nginx',
                         'Content-Length': data.length,
                         'Content-Type'  : libMime.lookup(path),
                         'Last-Modified' : state.mtime.toGMTString()
                     });
                     res.end(data);
-                });
+                }
             }
-        }
-        else {
-            toRequest(req).then((response, resBody) => {
-                res.writeHead(response.statusCode, response.header);
+            else {
+                let {response, resBody} = await toRequest(req);
+                res.writeHead(response.statusCode, response.headers);
                 res.end(resBody);
 
-                writeAsync(path, resBody).catch((e) => { error(e); });
-            }).catch((e) => {
-                error(e);
-            });
+                await writeAsync(path, resBody);
+            }
+        }
+        catch(e) {
+            error(e);
         }
     },
-    processApi = (req, res) => {
-        toRequest(req).then((response, resBody) => {
-            res.writeHead(response.statusCode, response.header);
+    processApi = async (req, res) => {
+        try{
+            let {response, resBody} = await toRequest(req);
+            res.writeHead(response.statusCode, response.headers);
             res.end(resBody);
 
             if(response.statusCode === '200') {
                 api.set(resBody, response.headers['content-encoding']);
             }
-        }).catch((e) => {
+        }
+        catch(e) {
             error(e);
-        });
+        }
     },
-    processOther = (req, res) => {
-        toRequest(req).then((response, resBody) => {
-            res.writeHead(response.statusCode, response.header);
+    processOther = async (req, res) => {
+        try{
+            let {response, resBody} = await toRequest(req);
+            res.writeHead(response.statusCode, response.headers);
             res.end(resBody);
-        });
+        }
+        catch(e) {
+            error(e);
+        }
     };
 
 class Proxy extends EventEmitter {
@@ -107,6 +117,7 @@ class Proxy extends EventEmitter {
             delete req.headers['proxy-connection'];
             req.headers.connection = 'close';
 
+            log(`on request:${req.url}`);
             let reqUrl = libUrl.parse(req.url);
 
             if (reqUrl.pathname.startsWith('/kcs/')) {
@@ -124,6 +135,7 @@ class Proxy extends EventEmitter {
             delete req.headers['proxy-connection'];
             req.headers.connection = 'close';
 
+            log(`on connect:${req.url}`);
             let remoteUrl = libUrl.parse(`https://${req.url}`);
             let remote = libNet.connect(remoteUrl.port, remoteUrl.hostname, () => {
                 remote.write(head);
@@ -146,5 +158,4 @@ class Proxy extends EventEmitter {
     }
 }
 
-//new Proxy(12450);
-export default new Proxy(12450);
+export default Proxy;

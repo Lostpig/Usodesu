@@ -2,26 +2,44 @@ import {error, readAsync, writeAsync} from './utils';
 
 let config = {};
 
-let load = () => {
-    let defconfig, userconfig;
-    readAsync(global.DEFAULTCONFIG).then((data) => {
-        defconfig = JSON.parse(data);
-        return readAsync(global.USERCONFIG);
-    }).then((data) => {
-        userconfig = JSON.parse(data);
+let load = async () => {
+    try {
+        let defconfig, userconfig;
+        defconfig = await readAsync(global.DEFAULTCONFIG);
+        userconfig = await readAsync(global.USERCONFIG);
+        if(defconfig !== null) {
+            defconfig = JSON.parse(defconfig);
+        }
+        else {
+            defconfig = {};
+        }
+        if(userconfig !== null) {
+            userconfig = JSON.parse(userconfig);
+        }
+        else {
+            userconfig = {};
+        }
+
         config = Object.assign(defconfig, userconfig);
-    }).catch((e) => {
+
+        return config;
+    }
+    catch(e) {
         error(e);
-    });
+        return null;
+    }
 };
 
-let save = () => {
-    let jsondata = JSON.stringify(config);
-    writeAsync(global.USERCONFIG, jsondata)
-    .then()
-    .catch((e) => {
+let save = async () => {
+    try{
+        let jsondata = JSON.stringify(config);
+        let success = await writeAsync(global.USERCONFIG, jsondata);
+        return success;
+    }
+    catch(e) {
         error(e);
-    });
+        return false;
+    }
 };
 
 export { load, save, config };

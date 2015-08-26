@@ -1,5 +1,6 @@
 {
+    "listenport": "12450",
     "proxy": "127.0.0.1:3213",
     "cachefolder": null,
-    "screenshot": null
+    "sshotfolder": null
 }

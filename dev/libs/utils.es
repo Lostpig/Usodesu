@@ -12,48 +12,68 @@ let stringify = (str) => {
 
     return str;
 };
+let assign = (target, ...items) => {
+    if (target === undefined || target === null) {
+        throw new TypeError('Cannot convert first argument to object');
+    }
+    let to = Object(target);
+    for(let [i,v] of items.entries()) {
+        if(v === undefined || v === null) {
+            continue;
+        }
+        v = Object(v);
+
+        let keyArr = Object.keys(v);
+        for (let nextIndex = 0, len = keyArr.length; nextIndex < len; nextIndex++) {
+            let nextKey = keyArr[nextIndex];
+            let desc = Object.getOwnPropertyDescriptor(v, nextKey);
+            if (desc !== undefined && desc.enumerable) {
+                to[nextKey] = v[nextKey];
+            }
+        }
+    }
+    return to;
+};
+if(!Object.assign) {
+    Object.defineProperty(Object, 'assign', {
+        enumerable  : false,
+        configurable: true,
+        writable    : true,
+        value       : assign
+    });
+}
 
 let
     warn = (msg) => {
         msg = stringify(msg);
-        console.warn(`[WARN] ${msg}`.yellow);
+        console.warn(`[WARN] ${msg}`);
     },
     error = (msg) => {
         msg = stringify(msg);
-        console.error(`[ERROR] ${msg}`.bold.red);
+        console.error(`[ERROR] ${msg}`);
     },
-    readAsync = (path) => {
-        return new Promise((resolve, reject) => {
-            try{
-                let data,
-                    isExists = libFs.existsSync(path);
-                if(isExists) {
-                    data = libFs.readFileSync(path);
-                }
-                else {
-                    data = null;
-                }
-                resolve(data);
-            }
-            catch(e) {
-                reject(e);
-            }
-        });
+    log = (msg) => {
+        msg = stringify(msg);
+        console.log(`[LOG]${msg}`);
     },
-    writeAsync = (path, data) => {
-        return new Promise((resolve, reject) => {
-            try{
-                let dir = libPath.dirname(path);
-                if(!libFs.existsSync(dir)) {
-                    libFs.mkdirSync(dir);
-                }
-                libFs.writeFileSync(path, data);
-                resolve();
-            }
-            catch(e) {
-                reject(e);
-            }
-        });
+    readAsync = async (path) => {
+        let data,
+            isExists = libFs.existsSync(path);
+        if(isExists) {
+            data = libFs.readFileSync(path);
+        }
+        else {
+            data = null;
+        }
+        return data;
+    },
+    writeAsync = async (path, data) => {
+        let dir = libPath.dirname(path);
+        if(!libFs.existsSync(dir)) {
+            libFs.mkdirSync(dir);
+        }
+        libFs.writeFileSync(path, data);
+        return true;
     };
 
-export { warn, error, readAsync, writeAsync };
+export { warn, error, log, readAsync, writeAsync, assign };

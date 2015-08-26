@@ -2,10 +2,10 @@
     "blacklist": [
 		"regenerator",
         "es6.blockScoping",
-        "es6.constants",
-        "es6.forOf"
+        "es6.constants"
 	],
     "optional": [
         "asyncToGenerator"
-    ]
+    ],
+    "modules": "common"
 }

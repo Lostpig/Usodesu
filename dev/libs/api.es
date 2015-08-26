@@ -26,13 +26,20 @@ class Api extends EventEmitter{
         super();
         this.store = {};
     }
-    set(body, encoding) {
-        unzip(body, encoding).then((data) => {
-            data = data.toString();
-            if(data.startsWith('svdata=')) { data = data.substring(7); }
-            let decodedata = JSON.parse(decodedata);
-            
-        });
+    async set(body, encoding) {
+        let data = await unzip(body, encoding);
+        data = data.toString();
+        if(data.startsWith('svdata=')) { data = data.substring(7); }
+        let decodedata = JSON.parse(decodedata);
+
+        this.store = decodedata;
+    }
+    get(name) {
+        let data = this.store[name];
+        if(data && typeof data === 'string') {
+            this.store[name] = data = JSON.parse(data);
+        }
+        return data;
     }
 }
 
