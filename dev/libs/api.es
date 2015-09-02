@@ -1,5 +1,6 @@
 import EventEmitter from 'events';
 import zlib from 'zlib';
+import {log, error, warn} from './utils';
 
 let unzip = (data, encoding) => {
     return new Promise((resolve, reject) => {
@@ -21,25 +22,30 @@ let unzip = (data, encoding) => {
     });
 };
 
+let apiEvent = {
+    '/kcsapi/api_start2': 'start'
+}
+
 class Api extends EventEmitter{
     constructor() {
         super();
-        this.store = {};
     }
-    async set(body, encoding) {
-        let data = await unzip(body, encoding);
-        data = data.toString();
-        if(data.startsWith('svdata=')) { data = data.substring(7); }
-        let decodedata = JSON.parse(decodedata);
+    async process(path, reqbody, resbody, encoding) {
+        try{
+            if(apiEvent[path]) {
+                let data = await unzip(resbody, encoding);
+                data = data.toString();
+                if(data.startsWith('svdata=')) { data = data.substring(7); }
 
-        this.store = decodedata;
-    }
-    get(name) {
-        let data = this.store[name];
-        if(data && typeof data === 'string') {
-            this.store[name] = data = JSON.parse(data);
+                this.emit(apiEvent[path], resbody.toString(), data);
+            }
+            else {
+                warn(`apiEvent: ${path} is not alivable`);
+            }
         }
-        return data;
+        catch(e) {
+            error(e);
+        }
     }
 }
 

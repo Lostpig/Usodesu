@@ -4,4 +4,7 @@
 # compile files
 /dist
 
+#note files
+/api_note
+
 /userset.json

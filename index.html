@@ -5,11 +5,16 @@
 </head>
 <body>
     <div id="kan">
-        <webview id="wvkan" src="http://www.baidu.com" style="height: 480px;width: 640px;"></webview>
+        <webview id="wvkan" src="http://localhost:8120/" style="height: 480px;width: 640px;"></webview>
     </div>
     <div id="content">
         <input type="text" id="urltext">
         <input type="button" value="go" id="btngo">
+    </div>
+    <div>
+        <input type="button" value="loadapi" id="loadapi">
+        <div id="apiinfo">
+        </div>
     </div>
     <script>
         require('./dist/view/index');

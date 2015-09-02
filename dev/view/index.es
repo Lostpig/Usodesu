@@ -1,4 +1,6 @@
-let remote = require('remote');
+let remote = window.remote = require('remote');
+let models = require('../models/models');
+require('./apiObserver');
 
 let wvKan   = document.getElementById('wvkan'),
     content = document.getElementById('content');
@@ -20,4 +22,19 @@ let btngo = document.getElementById('btngo');
 btngo.addEventListener('click', () => {
     let u = document.getElementById('urltext').value;
     wvKan.src = u;
+});
+
+let btnload = document.querySelector('#loadapi');
+let shipinfo = models.getdata('shipinfo');
+btnload.addEventListener('click', () => {
+    let ship = shipinfo.get(1);
+    let html;
+    if(ship) {
+        html = `id:${ship.id} and name is ${ship.name} , hp is ${ship.hp}`;
+    }
+    else {
+        html = 'err: no ship';
+    }
+
+    document.querySelector('#apiinfo').innerHTML = html;
 });

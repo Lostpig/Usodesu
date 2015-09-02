@@ -5,7 +5,6 @@ import libFs        from 'fs';
 import libPath      from 'path';
 import libRequest   from 'request';
 import libMime      from 'mime';
-import EventEmitter from 'events';
 import config       from './config';
 import api          from './api';
 
@@ -28,16 +27,14 @@ let
                 };
                 if (reqbody.length > 0) {
                     option = Object.assign(option, { body: reqbody });
-                    //option['body'] = reqbody;
                 }
 
                 libRequest(option, (err, response, resbody) => {
-                    log(`[response]url:${option}||length:${resbody.length}`);
                     if(err) {
                         reject(err);
                     }
                     else {
-                        resolve({response: response, resBody: resbody});
+                        resolve({response: response, resBody: resbody, reqBody: reqbody});
                     }
                 });
             }).on('error', (e) => {
@@ -83,12 +80,13 @@ let
     },
     processApi = async (req, res) => {
         try{
-            let {response, resBody} = await toRequest(req);
+            let url = libUrl.parse(req.url);
+            let {response, resBody, reqBody} = await toRequest(req);
             res.writeHead(response.statusCode, response.headers);
             res.end(resBody);
 
-            if(response.statusCode === '200') {
-                api.set(resBody, response.headers['content-encoding']);
+            if(response.statusCode === 200) {
+                api.process(url.pathname, reqBody, resBody, response.headers['content-encoding']);
             }
         }
         catch(e) {
@@ -106,9 +104,8 @@ let
         }
     };
 
-class Proxy extends EventEmitter {
+class Proxy {
     constructor(port) {
-        super();
         this.load(port);
     }
     load(port) {
@@ -117,8 +114,8 @@ class Proxy extends EventEmitter {
             delete req.headers['proxy-connection'];
             req.headers.connection = 'close';
 
-            log(`on request:${req.url}`);
             let reqUrl = libUrl.parse(req.url);
+            log(`on request path:${reqUrl.pathname}`);
 
             if (reqUrl.pathname.startsWith('/kcs/')) {
                 processResource(req, res);
@@ -135,7 +132,6 @@ class Proxy extends EventEmitter {
             delete req.headers['proxy-connection'];
             req.headers.connection = 'close';
 
-            log(`on connect:${req.url}`);
             let remoteUrl = libUrl.parse(`https://${req.url}`);
             let remote = libNet.connect(remoteUrl.port, remoteUrl.hostname, () => {
                 remote.write(head);
@@ -151,7 +147,6 @@ class Proxy extends EventEmitter {
             remote.on('error', (e) => { error(e); client.destroy(); });
             client.on('error', (e) => { error(e); remote.destroy(); });
         });
-
         this.server.listen(port, () => {
             console.log(`proxy listen on ${port}`);
         });

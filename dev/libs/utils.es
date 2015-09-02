@@ -18,9 +18,7 @@ let assign = (target, ...items) => {
     }
     let to = Object(target);
     for(let [i,v] of items.entries()) {
-        if(v === undefined || v === null) {
-            continue;
-        }
+        if(v === undefined || v === null) { continue; }
         v = Object(v);
 
         let keyArr = Object.keys(v);
@@ -54,7 +52,7 @@ let
     },
     log = (msg) => {
         msg = stringify(msg);
-        console.log(`[LOG]${msg}`);
+        console.log(`[LOG] ${msg}`);
     },
     readAsync = async (path) => {
         let data,
