@@ -1,5 +1,5 @@
-import BaseModel from '../base'
-import Slotitem from '../data/slotitem'
+import BaseModel from '../base';
+import Slotitem  from '../data/slotitem';
 
 class Equips extends BaseModel {
     constructor() {
@@ -9,10 +9,11 @@ class Equips extends BaseModel {
     }
     parse (equip_item) {
         return {
-            id      : equip_item.api_id,
-            locked  : equip_item.api_locked === 1,
-            remodel : equip_item.api_alv,
-            base    : Slotitem.get(equip_item.api_slotitem_id),
+            id     : equip_item.api_id,
+            locked : equip_item.api_locked === 1,
+            remodel: equip_item.api_level,
+            planelv: equip_item.api_alv,
+            base   : Slotitem.get(equip_item.api_slotitem_id),
         };
     }
 }

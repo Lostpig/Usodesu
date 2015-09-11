@@ -22,26 +22,21 @@ let unzip = (data, encoding) => {
     });
 };
 
-let apiEvent = {
-    '/kcsapi/api_start2': 'start'
-}
-
-class Api extends EventEmitter{
+class Api extends EventEmitter {
     constructor() {
+        //this.observer = [];
         super();
     }
     async process(path, reqbody, resbody, encoding) {
         try{
-            if(apiEvent[path]) {
-                let data = await unzip(resbody, encoding);
-                data = data.toString();
-                if(data.startsWith('svdata=')) { data = data.substring(7); }
+            let data = await unzip(resbody, encoding);
+            data = data.toString();
+            if(data.startsWith('svdata=')) { data = data.substring(7); }
 
-                this.emit(apiEvent[path], resbody.toString(), data);
-            }
-            else {
-                warn(`apiEvent: ${path} is not alivable`);
-            }
+            this.emit('response', path, reqbody.toString(), data);
+            //for(let i = 0; i < this.observer.length; i++) {
+            //    this.observer[i].push({path:path, request: reqbody.toString(), response: data});
+            //}
         }
         catch(e) {
             error(e);

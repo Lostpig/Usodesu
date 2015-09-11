@@ -1,4 +1,4 @@
-import {log,error,warn} from '../libs/utils';
+let { log, error, warn } = window;
 
 class BaseModel {
     constructor() {
@@ -31,20 +31,25 @@ class BaseModel {
         }
         else {
             for(let key of Object.keys(api_obj)) {
-                this.set({key: key, value: api_obj[key]});
+                this.set(api_obj[key], key);
             }
         }
         this.loaded = true;
     }
     set(item, index) {
-        let parseItem = this.parse(item, index);
-        if (parseItem !== false) {
-            if(parseItem.id) {
-                this.map.set(parseItem.id, parseItem);
+        try {
+            let parseItem = this.parse(item, index);
+            if (parseItem !== false) {
+                if(parseItem.id) {
+                    this.map.set(parseItem.id, parseItem);
+                }
+                else {
+                    this.map.set(index, parseItem);
+                }
             }
-            else {
-                this.map.set(item.key, parseItem);
-            }
+        }
+        catch(e) {
+            error(`[${this.modelname} ERROR]:${e}`);
         }
     }
     get (key) {
@@ -75,7 +80,7 @@ class BaseModel {
         return this.map.has(key);
     }
     get size() {
-        return this.map.size();
+        return this.map.size;
     }
 }
 

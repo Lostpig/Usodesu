@@ -2,6 +2,7 @@ import app           from 'app';
 import BrowserWindow from 'browser-window';
 import repoter       from 'crash-reporter';
 import path          from 'path';
+import ipc           from 'ipc';
 
 import Proxy from './libs/proxy';
 import {load, save, config} from './libs/config';
@@ -12,18 +13,6 @@ global.BASEPATH = DIRNAME;
 global.DISTPATH = `${DIRNAME}/dist/`;
 global.DEFAULTCONFIG = `${DIRNAME}/config.json`;
 global.USERCONFIG = `${DIRNAME}/userset.json`;
-
-load().then((cfg) => {
-    if(!cfg.cachefolder) {
-        config.cachefolder = `${DIRNAME}/cache/`;
-    }
-    if(!cfg.sshotfolder) {
-        config.sshotfolder = `${DIRNAME}/screenshot/`;
-    }
-    save().then((success) => {
-        run();
-    });
-});
 
 let run = () => {
     new Proxy(config.listenport);
@@ -40,11 +29,16 @@ let run = () => {
     });
 
     app.on('ready', function() {
+        let screen = require('screen');
+        let screenSize = screen.getPrimaryDisplay().workAreaSize;
         mainWindow = new BrowserWindow({
-            x                : 0,
-            y                : 0,
-            width            : 800,
-            height           : 600,
+            'x'              : 0,
+            'y'              : 0,
+            'width'          : 800,
+            'height'         : screenSize.height,
+            'title'          : 'Usodesu',
+            'frame'          : false,
+            'transparent'    : true,
             'web-preferences': {
                 'web-security': false
             }
@@ -55,15 +49,36 @@ let run = () => {
             }
         }
 
-        mainWindow.loadUrl(`file://${DIRNAME}/index.html`);
-        //mainWindow.openDevTools();
+        mainWindow.loadUrl(`file://${DIRNAME}/index.html#horizonal`);
+        mainWindow.openDevTools({detach: true});
         mainWindow.on('closed', () => {
             mainWindow = null;
         });
     });
-}
+
+    ipc.on( 'app-quit', (event) => {
+        event.returnValue = true;
+        mainWindow.close();
+    });
+    ipc.on( 'app-minimize', (event) => {
+        event.returnValue = true;
+        mainWindow.minimize();
+    });
+};
 
 //Uncaught error
 process.on('uncaughtException', (e) => {
     error(e);
+});
+
+load().then((cfg) => {
+    if(!cfg.cachefolder) {
+        config.cachefolder = `${DIRNAME}/cache/`;
+    }
+    if(!cfg.sshotfolder) {
+        config.sshotfolder = `${DIRNAME}/screenshot/`;
+    }
+    save().then((success) => {
+        run();
+    });
 });

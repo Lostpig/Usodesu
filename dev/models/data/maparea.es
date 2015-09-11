@@ -1,4 +1,5 @@
 import BaseModel from '../base';
+import Gene      from '../general'
 
 class Maparea extends BaseModel {
     constructor() {
@@ -9,7 +10,7 @@ class Maparea extends BaseModel {
         let area = {
             id  : area_item.api_id,
             name: area_item.api_name,
-            type: area_item.api_type
+            type: Gene.getAreaType(area_item.api_type)
         };
         return area;
     }

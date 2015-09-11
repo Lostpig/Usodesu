@@ -11,7 +11,7 @@ class Slotitem extends BaseModel {
             id       : slot_item.api_id,
             sortno   : slot_item.api_sortno,
             name     : slot_item.api_name,
-            isplane  : Gene.isPlane(slotitem.api_type[3]);
+            isplane  : Gene.isPlane(slot_item.api_type[3]),
             firepower: slot_item.api_houg,
             armor    : slot_item.api_souk,
             torpedo  : slot_item.api_raig,
@@ -20,8 +20,7 @@ class Slotitem extends BaseModel {
             antisub  : slot_item.api_tais,
             hit      : slot_item.api_houm,
             dodge    : slot_item.api_houk,
-            scanrange: slot_item.api_saku,
-            armor    : slot_item.api_souk
+            scanrange: slot_item.api_saku
         };
         return slotitem;
     }

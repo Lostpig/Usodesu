@@ -1,0 +1,20 @@
+<div id="toolbar" ng-controller="toolbarCtrl">
+    <div class="info">
+        <span>{{player}} {{rank}}</span>
+        <span>lv.{{level}} next.{{exp}}</span>
+    </div>
+    <div class="resource">
+        <span class="mat">{{construct}}</span>
+        <span class="mat">{{remodel}}</span>
+        <span class="mat">{{shipcount}}/{{shipslot}}</span>
+        <span class="mat">{{equipcount}}/{{equipslot}}</span>
+    </div>
+    <div class="buttons">
+        <a href="javascript:">+</a>
+        <a href="javascript:">+</a>
+        <a href="javascript:">+</a>
+        <a href="javascript:">+</a>
+        <a href="javascript:">+</a>
+        <a href="javascript:" ng-click="app.close()">X</a>
+    </div>
+</div>

@@ -1,23 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Hello World!</title>
+    <meta charset="UTF-8">
+    <title>Usodesu</title>
+    <link href="static/css/index.css" rel="stylesheet">
 </head>
 <body>
-    <div id="kan">
-        <webview id="wvkan" src="http://localhost:8120/" style="height: 480px;width: 640px;"></webview>
-    </div>
-    <div id="content">
-        <input type="text" id="urltext">
-        <input type="button" value="go" id="btngo">
-    </div>
-    <div>
-        <input type="button" value="loadapi" id="loadapi">
-        <div id="apiinfo">
+    <div ng-controller="appCtrl as app">
+        <div id="kan_webview">
+            <webview id="wvkan" src="http://localhost:8120/" disablewebsecurity style="height: 480px;"></webview>
         </div>
+        <div class="content" ui-view></div>
     </div>
+    <!-- Angular Dependencies -->
+    <script src="static/angular/angular.min.js"></script>
+    <script src="static/angular/angular-route.min.js"></script>
+    <script src="static/angular/angular-ui-router.min.js"></script>
     <script>
-        require('./dist/view/index');
+        require('./dist/libs/app.js');
+        require('./dist/view/index.js');
     </script>
 </body>
 </html>

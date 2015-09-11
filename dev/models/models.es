@@ -1,7 +1,7 @@
 let datamap = new Map(),
     recordmap = new Map();
 
-let models {
+let models = {
     getdata(name) {
         try{
             if(!datamap.has(name)) {
@@ -10,18 +10,18 @@ let models {
             return datamap.get(name);
         }
         catch(e) {
-            error(`can not find data model [${name}]`);
+            window.error(`can not find data model [${name}]`);
         }
-    }
+    },
     getrecord(name) {
         try{
             if(!recordmap.has(name)) {
-                recordmap.set(name, require('./data/' + name));
+                recordmap.set(name, require('./record/' + name));
             }
             return recordmap.get(name);
         }
         catch(e) {
-            error(`can not find record model [${name}]`);
+            window.error(`can not find record model [${name}]`);
         }
     }
 }

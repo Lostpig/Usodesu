@@ -1,0 +1,63 @@
+@font-face {
+    font-family: 'Hack';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Hack'), local('Hack-Regular'), url('../fonts/hack-regular-webfont.woff2') format('woff2');
+}
+body{ margin: 0; min-width:640px; font-family:Hack, Yahei, sans-serif; background-color:rgba(1,1,1,1); }
+ul, ol{ padding:0; margin:0; }
+li{ list-style:none; }
+
+#kan_webview{height:480px;}
+
+#toolbar{ width:100%; height:25px; display:flex; flex-flow:row wrap; font-size:12px; color:#ddd; }
+#toolbar .info{ width:275px; line-height:25px; background-color:rgba(33,33,33,1); }
+#toolbar .resource{ flex:1; display:flex; flex-flow:column wrap; background-color:rgba(33,33,33,1); margin-left: 1px; }
+    #toolbar .resource > span{ line-height:25px; display:inline-block; width:25%; }
+#toolbar .buttons { display:flex; flex-flow:row wrap; }
+    #toolbar .buttons > a { width:25px; height:25px; text-decoration:none; color:#ddd; background-color:rgba(33,33,33,1); margin-left: 1px; }
+    #toolbar .buttons > a:hover { background-color:rgba(77,77,77,1);  }
+
+#content{ width:100%; height:calc(100vh - 505px); display:flex; flex-flow:row wrap; color:#ddd; }
+.menu { width:50px; height:100%; overflow:hidden; margin-right:10px; background-color:rgba(33,33,33,1); }
+    .menu .item{ width:50px; height:25%; line-height:50px; text-align:center; cursor:pointer; color:#777; }
+    .menu .item.active{ background-color:rgba(1,1,1,1); }
+    .menu .item:hover{ color:#eee; }
+
+.board { height:100%; flex:1; overflow:hidden; }
+
+.decks{ min-width:450px; width:100%; height:100%; display:flex; flex-flow:row wrap; }
+.decks > .tabs{ height:25px; width:100%; line-height:23px; -webkit-column-count:4; -webkit-column-gap:10px; }
+.decks > .tabs .deck{ text-align:center; cursor:pointer; }
+    .deck.normal{ color:#999999; }
+    .deck.attack{ color:#27ee6f; }
+    .deck.misson{ color:#7fb0fc; }
+    .deck.repair{ color:#cbde12; }
+    .deck.broken{ color:#f21e1b; }
+    .deck.select{ border-bottom:2px solid #0119fd; }
+
+.decks > .summation{ width:100%; height:20px; display:flex; flex-flow:row nowrap; }
+    .decks > .summation > li { flex:1; text-align:center; }
+
+.decks > .ships{ width:100%; height:calc(100% - 25px); display:flex; flex-flow:row nowrap; }
+.shiph{ height:124px; width:124px; outline:1px solid #666; flex-grow:2; margin:6px 3px; display:flex; flex-flow:row wrap; padding:3px; }
+    .shiph > strong{ flex-basis:100%; height: 25px; font-size:20px; font-weight:normal; }
+    .shiph > small{ flex-basis:100%; font-size:10px; }
+    .shiph > span{ flex-basis:50%; font-size:11px; }
+    .shiph > span:nth-of-type(2){ text-align:right; }
+    .shiph > .health { flex-basis:100%; height: 8px; }
+    .shiph > .fuel,
+    .shiph > .bullet { flex-grow:1; height: 5px; margin:2px 0; }
+    .shiph > .fuel { margin-right: 2px; }
+    .shiph > .bullet { margin-left: 2px; }
+    .shiph > .equips{ flex-basis:100%; width:100%; height:32px; margin-top:3px; -webkit-column-count:4; -webkit-column-gap:1px; }
+
+.equip-slot{ position:relative; height:100%; }
+    .equip-slot > sup{ font-size:8px; position:absolute; bottom:0; right:0; width:18px; height:18px; border-radius:50%; border:1px solid #ddd; background-color:#111; }
+    .equip-test{ width:24px; height:24px; border-radius:50%; background-color:#336699;  }
+
+.bar{ background-color:#1e1e1e; }
+.statusbar{ height:100%; background-color:#00ff00; vertical-align:middle; }
+.statusbar.normal{ background-color:#00ff00; }
+.statusbar.warn{ background-color:#ff9900; }
+.statusbar.danger{ background-color:#ff0000; }

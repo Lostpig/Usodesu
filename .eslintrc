@@ -10,7 +10,7 @@
         "spread": true,
         "restParams": true,
         "defaultParams": false,
-        "destructuring": false,
+        "destructuring": true,
         "forOf": true,
         "generators": true,
 

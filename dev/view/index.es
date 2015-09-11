@@ -1,40 +1,46 @@
+import models from '../models/models';
 let remote = window.remote = require('remote');
-let models = require('../models/models');
-require('./apiObserver');
+window.log = (msg) => { console.log(msg); };
+window.error = (msg) => { console.log(msg); };
+window.warn = (msg) => { console.log(msg); };
 
-let wvKan   = document.getElementById('wvkan'),
-    content = document.getElementById('content');
+window.models = models;
+window.observer = require('./apiObserver');
 
-let link = document.createElement('button');
-link.innerHTML = 'open own tool';
-link.addEventListener('click', () => {
-    remote.getCurrentWindow().openDevTools({detach: true});
-});
-content.appendChild(link);
-let link2 = document.createElement('button');
-link2.innerHTML = 'open page tool';
-link2.addEventListener('click', () => {
-    wvKan.openDevTools({detach: true});
-});
-content.appendChild(link2);
+let usodesu = window.usodesu = angular
+    .module('usodesu', [
+        'ui.router',
+        'ngRoute',
+        require('./controller/toolbar').name,
+        require('./controller/decks').name
+    ])
+    .config(['$stateProvider',
+        '$httpProvider',
+        '$routeProvider',
+        function($stateProvider, $httpProvider, $routeProvider) {
+            $stateProvider
+                .state('horizontal', {
+                    url        : '/horizonal',
+                    templateUrl: 'static/views/horizontal.html'
+                })
+                .state('vertical', {
+                    url        : '/vertical',
+                    templateUrl: 'static/views/vertical.html'
+                });
+        }
+    ])
+    .controller('appCtrl', ['$scope', '$state', '$window', function ($scope, $state, $window) {
+        let self = this;
+        self.layout = 'horizonal';
+        self.setLayout = (layout) => {
+            self.layout = layout;
+            $state.transitionTo( $state.current, {}, { reload: false, inherit: true, notify: false } );
+        };
+        self.close = () => {
+            $window.App.quit();
+        };
+    }]);
 
-let btngo = document.getElementById('btngo');
-btngo.addEventListener('click', () => {
-    let u = document.getElementById('urltext').value;
-    wvKan.src = u;
-});
-
-let btnload = document.querySelector('#loadapi');
-let shipinfo = models.getdata('shipinfo');
-btnload.addEventListener('click', () => {
-    let ship = shipinfo.get(1);
-    let html;
-    if(ship) {
-        html = `id:${ship.id} and name is ${ship.name} , hp is ${ship.hp}`;
-    }
-    else {
-        html = 'err: no ship';
-    }
-
-    document.querySelector('#apiinfo').innerHTML = html;
+angular.element().ready(() => {
+    angular.bootstrap(document, ['usodesu']);
 });

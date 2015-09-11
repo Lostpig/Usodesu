@@ -1,0 +1,27 @@
+<div class="decks" ng-controller="deckCtrl">
+<ul class="tabs" ng-controller="deckstabCtrl">
+    <li class="deck" ng-repeat="deck in decks" ng-click="change(deck.id)">{{deck.name}}</li>
+</ul>
+<ul class="summation" ng-controller="deckinfoCtrl">
+    <li>sum.{{sumlv}}</li>
+    <li>avg.{{avglv}}</li>
+    <li>range.{{range}}</li>
+    <li>AA.{{aa}}</li>
+</ul>
+<ul class="ships" ng-controller="deckinfoCtrl">
+    <li class="shiph" ng-repeat="ship in ships">
+        <strong>{{ship.shipinfo.name}}</strong>
+        <small>lv.{{ship.level}} ({{ship.needexp}})</small>
+        <span>cond.{{ship.cond}}</span><span>{{ship.hp}}/{{ship.hpmax}}</span>
+        <div class="health bar"><div class="statusbar warn" style="width:{{ship.hp/ship.hpmax * 100}}%;"></div></div>
+        <div class="fuel bar"><div class="statusbar danger" style="width:{{ship.fuel/ship.shipinfo.fuelmax * 100}}%;"></div></div>
+        <div class="bullet bar"><div class="statusbar" style="width:{{ship.bullet/ship.shipinfo.bulletmax * 100}}%;"></div></div>
+        <div class="equips">
+            <div class="equip-slot" ng-repeat="equip in ship.equips">
+                <div class="equip-test" title="{{equip.base.name}}"></div>
+                <sup class="aa" ng-show="equip.base.isplane">35</sup>
+            </div>
+        </div>
+    </li>
+</ul>
+</div>
