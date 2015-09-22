@@ -4,7 +4,7 @@ import Mapinfo   from './mapinfo';
 class Mapcell extends BaseModel {
     constructor() {
         super();
-        this.modelname = 'Mapcell';
+        this.modelname = 'MapCell';
         this.addDependency(Mapinfo);
     }
     parse(cell_item) {

@@ -1,29 +1,40 @@
-let datamap = new Map(),
-    recordmap = new Map();
+import BaseModel from './base';
 
-let models = {
-    getdata(name) {
-        try{
-            if(!datamap.has(name)) {
-                datamap.set(name, require('./data/' + name));
+let modellist = {
+    'EquipType': './data/equiptype',
+    'MapArea'  : './data/maparea',
+    'MapCell'  : './data/mapcell',
+    'MapInfo'  : './data/mapinfo',
+    'Mission'  : './data/mission',
+    'ShipInfo' : './data/shipinfo',
+    'ShipType' : './data/shiptype',
+    'SlotItem' : './data/slotitem',
+
+    'BasicInfo'    : './record/basicinfo',
+    'ConstructDock': './record/constructdock',
+    'Equips'       : './record/equips',
+    'Quest'        : './record/quest',
+    'RepairDock'   : './record/repairdock',
+    'Resource'     : './record/resource',
+    'ShipDeck'     : './record/shipdeck',
+    'Ships'        : './record/ships'
+};
+
+class Model extends BaseModel {
+    constructor() {
+        super();
+        this.modelname = 'ModelManager';
+    }
+    get(modelname) {
+        if(!this.has(modelname)) {
+            if(modellist[modelname]) { this.map.set(modelname, require(modellist[modelname])); }
+            else {
+                error(`Model [${modelname}] not aliveble`);
+                return null;
             }
-            return datamap.get(name);
         }
-        catch(e) {
-            window.error(`can not find data model [${name}]`);
-        }
-    },
-    getrecord(name) {
-        try{
-            if(!recordmap.has(name)) {
-                recordmap.set(name, require('./record/' + name));
-            }
-            return recordmap.get(name);
-        }
-        catch(e) {
-            window.error(`can not find record model [${name}]`);
-        }
+        return this.map.get(modelname);
     }
 }
 
-export default models;
+export default new Model();

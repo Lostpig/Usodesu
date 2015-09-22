@@ -8,16 +8,15 @@
 <body>
     <div ng-controller="appCtrl as app">
         <div id="kan_webview">
-            <webview id="wvkan" src="http://localhost:8120/" disablewebsecurity style="height: 480px;"></webview>
+            <webview id="kanView" src="http://localhost:8120/" disablewebsecurity style="height: 480px;"></webview>
         </div>
-        <div class="content" ui-view></div>
+        <div id="usodesu-panel" ui-view></div>
     </div>
     <!-- Angular Dependencies -->
     <script src="static/angular/angular.min.js"></script>
     <script src="static/angular/angular-route.min.js"></script>
     <script src="static/angular/angular-ui-router.min.js"></script>
     <script>
-        require('./dist/libs/app.js');
         require('./dist/view/index.js');
     </script>
 </body>

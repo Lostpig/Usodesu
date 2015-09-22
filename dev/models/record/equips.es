@@ -12,7 +12,7 @@ class Equips extends BaseModel {
             id     : equip_item.api_id,
             locked : equip_item.api_locked === 1,
             remodel: equip_item.api_level,
-            planelv: equip_item.api_alv,
+            planelv: equip_item.api_alv || 0,
             base   : Slotitem.get(equip_item.api_slotitem_id),
         };
     }

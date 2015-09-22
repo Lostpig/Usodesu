@@ -1,10 +1,10 @@
 import BaseModel from '../base';
-import Gene      from '../general'
+import Gene      from '../general';
 
 class Maparea extends BaseModel {
     constructor() {
         super();
-        this.modelname = 'Maparea';
+        this.modelname = 'MapArea';
     }
     parse(area_item) {
         let area = {

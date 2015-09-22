@@ -1,4 +1,4 @@
-let { log, error, warn } = window;
+var { log, error, warn } = window;
 
 class BaseModel {
     constructor() {
@@ -15,7 +15,7 @@ class BaseModel {
     checkDependency () {
         let hasAllLoaded = true;
         for (let dep of this.dependency) {
-            if(!dep.loaded) {
+            if (!dep.loaded) {
                 error(`${dep.modelname} not loaded, can't load ${this.modelname}`);
                 hasAllLoaded = false;
             }
@@ -24,23 +24,23 @@ class BaseModel {
     }
     update (api_obj) {
         if (!this.checkDependency()) { return; }
-        if(api_obj instanceof Array) {
-            for(let [index, item] of api_obj.entries()) {
+        if (api_obj instanceof Array) {
+            for (let [index, item] of api_obj.entries()) {
                 this.set(item, index);
             }
         }
         else {
-            for(let key of Object.keys(api_obj)) {
+            for (let key of Object.keys(api_obj)) {
                 this.set(api_obj[key], key);
             }
         }
         this.loaded = true;
     }
-    set(item, index) {
+    set (item, index) {
         try {
             let parseItem = this.parse(item, index);
             if (parseItem !== false) {
-                if(parseItem.id) {
+                if (parseItem.id) {
                     this.map.set(parseItem.id, parseItem);
                 }
                 else {
@@ -48,12 +48,15 @@ class BaseModel {
                 }
             }
         }
-        catch(e) {
+        catch (e) {
             error(`[${this.modelname} ERROR]:${e}`);
         }
     }
     get (key) {
-        return this.map.get(key);
+        if (this.has(key)) {
+            return this.map.get(key);
+        }
+        return null;
     }
     delete (key) {
         this.map.delete(key);
@@ -61,25 +64,23 @@ class BaseModel {
     find (key, val) {
         let finditem = null;
         for (let item of this.map.values()) {
-            if(item[key] === val) {
+            if (item[key] === val) {
                 finditem = item; break;
             }
         }
         return finditem;
     }
-    filter (key, val) {
+    filter (filterfunc) {
         let findArr = [];
         for (let item of this.map.values()) {
-            if(item[key] === val) {
-                findArr.push(item);
-            }
+            if (filterfunc(item)) { findArr.push(item); }
         }
-        return finditem;
+        return findArr;
     }
     has (key) {
         return this.map.has(key);
     }
-    get size() {
+    get size () {
         return this.map.size;
     }
 }

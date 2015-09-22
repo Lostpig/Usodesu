@@ -4,60 +4,120 @@
     font-weight: 400;
     src: local('Hack'), local('Hack-Regular'), url('../fonts/hack-regular-webfont.woff2') format('woff2');
 }
-body{ margin: 0; min-width:640px; font-family:Hack, Yahei, sans-serif; background-color:rgba(1,1,1,1); }
+body{ margin: 0; min-width:640px; font-family:Hack, Yahei, sans-serif; font-size:13px; background-color:rgba(1,1,1,1); }
 ul, ol{ padding:0; margin:0; }
 li{ list-style:none; }
 
-#kan_webview{height:480px;}
+#kan_webview{ height:480px; }
+#usodesu-panel{ position:relative; }
 
-#toolbar{ width:100%; height:25px; display:flex; flex-flow:row wrap; font-size:12px; color:#ddd; }
-#toolbar .info{ width:275px; line-height:25px; background-color:rgba(33,33,33,1); }
-#toolbar .resource{ flex:1; display:flex; flex-flow:column wrap; background-color:rgba(33,33,33,1); margin-left: 1px; }
-    #toolbar .resource > span{ line-height:25px; display:inline-block; width:25%; }
+#toolbar{ width:100%; height:32px; display:flex; flex-flow:row wrap; font-size:12px; color:#ddd; }
+#toolbar .menubutton { width:32px; height:32px; background:rgba(33,33,33,1) url(../img/buttons/menu.png) 0 0px no-repeat; cursor:pointer; }
+    #toolbar .menubutton:hover{ background-color:rgba(99,99,99,1); }
+    #toolbar .menubutton.active{ background-position:0 -32px; background-color:rgba(66,66,66,1); }
+#toolbar .info{ width:275px; line-height:32px; background-color:rgba(33,33,33,1); margin-left: 1px; text-indent:5px; }
+#toolbar .dockscount{ flex:1; background-color:rgba(33,33,33,1); margin-left: 1px; }
+    #toolbar .dockscount > span{ line-height:32px; display:inline-block; width:90px; margin-left:5px; text-indent:24px; background: url(../img/test.png) 2px 50% no-repeat; }
 #toolbar .buttons { display:flex; flex-flow:row wrap; }
-    #toolbar .buttons > a { width:25px; height:25px; text-decoration:none; color:#ddd; background-color:rgba(33,33,33,1); margin-left: 1px; }
-    #toolbar .buttons > a:hover { background-color:rgba(77,77,77,1);  }
+    #toolbar .buttons > a { width:32px; height:32px; text-decoration:none; color:#ddd; background-color:rgba(33,33,33,1); margin-left: 1px; text-align:center; line-height:32px; font-size:20px; }
+    #toolbar .buttons > a:hover { background-color:rgba(99,99,99,1); }
 
-#content{ width:100%; height:calc(100vh - 505px); display:flex; flex-flow:row wrap; color:#ddd; }
-.menu { width:50px; height:100%; overflow:hidden; margin-right:10px; background-color:rgba(33,33,33,1); }
-    .menu .item{ width:50px; height:25%; line-height:50px; text-align:center; cursor:pointer; color:#777; }
-    .menu .item.active{ background-color:rgba(1,1,1,1); }
-    .menu .item:hover{ color:#eee; }
+#menu{ position:absolute; left:1px; top:32px; background-color:rgba(33,33,33,1); border:1px solid #666666; color:#ddd; z-index:99; }
+    #menu > ul { width:100%; min-width:150px; }
+    #menu > ul > li{ height:36px; line-height:36px; text-indent:15px; cursor:pointer; }
+    #menu > ul > li.active{ background-color:rgba(66,66,66,1); }
+    #menu > ul > li:hover{ background-color:rgba(99,99,99,1); }
 
-.board { height:100%; flex:1; overflow:hidden; }
+#content-test{ width:100%; height:215px; display:flex; flex-flow:row wrap; color:#ddd; margin-top:1px; }
+#content{ width:100%; height:calc(100vh - 513px); display:flex; flex-flow:row wrap; color:#ddd; margin-top:1px; }
 
 .decks{ min-width:450px; width:100%; height:100%; display:flex; flex-flow:row wrap; }
-.decks > .tabs{ height:25px; width:100%; line-height:23px; -webkit-column-count:4; -webkit-column-gap:10px; }
-.decks > .tabs .deck{ text-align:center; cursor:pointer; }
-    .deck.normal{ color:#999999; }
-    .deck.attack{ color:#27ee6f; }
-    .deck.misson{ color:#7fb0fc; }
-    .deck.repair{ color:#cbde12; }
-    .deck.broken{ color:#f21e1b; }
-    .deck.select{ border-bottom:2px solid #0119fd; }
+.decks > .tabs{ height:27px; width:100%; line-height:25px; background-color:rgba(33,33,33,1); -webkit-column-count:4; -webkit-column-gap:0; }
+    .decks > .tabs > .deck{ text-align:center; cursor:pointer; }
+    .decks > .tabs > .deck.normal{ color:#999999; }
+    .decks > .tabs > .deck.attack{ color:#27ee6f; }
+    .decks > .tabs > .deck.mission{ color:#7fb0fc; }
+    .decks > .tabs > .deck.repair{ color:#cbde12; }
+    .decks > .tabs > .deck.broken{ color:#f21e1b; }
+    .decks > .tabs > .deck.selected{ border-bottom:2px solid #5c8ffd; }
+.decks > .summation{ width:100%; height:30px; display:flex; flex-flow:row nowrap; margin:1px 0; background-color:rgba(33,33,33,1); }
+    .decks > .summation > li { flex:1; text-align:center; line-height:30px; }
 
-.decks > .summation{ width:100%; height:20px; display:flex; flex-flow:row nowrap; }
-    .decks > .summation > li { flex:1; text-align:center; }
+.decks > .ships{ width:100%; height:calc(100% - 60px); display:flex; flex-flow:row nowrap; }
+.ship-block{ flex:1; height:calc(100% - 10px); background-color:rgba(33,33,33,1); flex-grow:2; margin:1px; padding:3px; }
+    .ship-block > .states{ display:flex; flex-flow:row wrap; }
+        .ship-block > .states strong{ flex-basis:100%; height: 25px; font-size:20px; font-weight:normal; }
+        .ship-block > .states small{ flex-basis:100%; font-size:10px; }
+        .ship-block > .states span{ flex-basis:50%; font-size:11px; }
+        .ship-block > .states span:nth-of-type(2){ text-align:right; }
+    .ship-block > .bars{ display:flex; flex-flow:row wrap; }
+        .ship-block > .bars .health { flex-basis:100%; height: 10px; }
+        .ship-block > .bars .fuel,
+        .ship-block > .bars .bullet { flex-grow:1; height: 6px; margin:4px 0; }
+        .ship-block > .bars .fuel { margin-right: 2px; }
+        .ship-block > .bars .bullet { margin-left: 2px; }
+    .ship-block > .equips{ flex-basis:100%; width:100%; height:32px; margin-top:3px; -webkit-column-count:4; -webkit-column-gap:1px; }
+        .equip-slot{ position:relative; height:100%; }
+            .equip-slot > sup{ font-size:8px; position:absolute; bottom:0; right:5px; width:15px; height:15px; border-radius:50%; border:1px solid #ddd; background-color:#111; }
+            .equip-test{ width:28px; height:28px; border-radius:50%; background-color:#336699;  }
 
-.decks > .ships{ width:100%; height:calc(100% - 25px); display:flex; flex-flow:row nowrap; }
-.shiph{ height:124px; width:124px; outline:1px solid #666; flex-grow:2; margin:6px 3px; display:flex; flex-flow:row wrap; padding:3px; }
-    .shiph > strong{ flex-basis:100%; height: 25px; font-size:20px; font-weight:normal; }
-    .shiph > small{ flex-basis:100%; font-size:10px; }
-    .shiph > span{ flex-basis:50%; font-size:11px; }
-    .shiph > span:nth-of-type(2){ text-align:right; }
-    .shiph > .health { flex-basis:100%; height: 8px; }
-    .shiph > .fuel,
-    .shiph > .bullet { flex-grow:1; height: 5px; margin:2px 0; }
-    .shiph > .fuel { margin-right: 2px; }
-    .shiph > .bullet { margin-left: 2px; }
-    .shiph > .equips{ flex-basis:100%; width:100%; height:32px; margin-top:3px; -webkit-column-count:4; -webkit-column-gap:1px; }
+.ship-circle{ width:128px; height:128px; overflow:hidden; position:relative; color:#fff; margin:auto auto; }
+    .ccbar{ overflow:hidden; position:absolute; }
+    .ccbar .bg{ position:absolute; border-radius:50%; background:#333333; }
+    .ccbar .bar{ position:absolute; top:0; left:0; width:100%; height:100%; overflow:hidden; transform:rotate(0deg); }
+    .ccbar .statusbar{ position:absolute; border-radius:50%; }
+    .ccbar.health{ width:128px; height:64px; top:0; left:0; }
+        .ccbar.health .bg{ position:absolute; top:0; left:0; width:100%; height:200%;  }
+        .ccbar.health .bar{ transform-origin: 50% 100%; }
+        .ccbar.health .statusbar{ top:0; left:0; width:100%; height:200%;  }
+    .ccbar.fuel{ width:64px; height:64px; bottom:0; left:0; }
+        .ccbar.fuel .bg{ top:-100%; left:0; width:200%; height:200%; }
+        .ccbar.fuel .bar{ transform-origin: 100% 0%; }
+        .ccbar.fuel .statusbar{ top:-100%; left:0; width:200%; height:200%; }
+    .ccbar.bullet{ width:64px; height:64px; bottom:0; right:0; }
+        .ccbar.bullet .bg{ top:-100%; right:0; width:200%; height:200%; }
+        .ccbar.bullet .bar{ transform-origin: 0% 0%; }
+        .ccbar.bullet .statusbar{ top:-100%; right:0; width:200%; height:200%; }
+    .cccore{ width:112px; height:112px; position:absolute; top:8px; left:8px; background:#111; border-radius:50%; }
+        .cccore > span{ position:absolute; width:28px; height:28px; line-height:28px; font-size:12px; text-align:center; border-radius:50%; }
+        .cccore > .level{ top: 5.9687px; left: 27.0753px; background:#39d; }
+        .cccore > .cond{ top: 5.9687px; left: 56.9247px; background:#fa2; }
+        .cccore > .name{ position:absolute; width:90%; left:5%; top:calc(50% - 22px); line-height:25px; font-size:13px; text-align:center; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; }
+        .cccore > .hptext{ position:absolute; width:100%; top:52%; text-align:center; font-size:12px; font-weight:normal; }
+        .cccore > .slot{ position:absolute; width:24px; height:24px; border-radius:50%; background:#369; }
+        .cccore > .slot.e1{top: 60.0727px; left: 5.19706px;}
+        .cccore > .slot.e2{top: 82.8029px; left: 27.9273px;}
+        .cccore > .slot.e3{top: 82.8029px; left: 60.0727px;}
+        .cccore > .slot.e4{top: 60.0727px; left: 82.8029px;}
 
-.equip-slot{ position:relative; height:100%; }
-    .equip-slot > sup{ font-size:8px; position:absolute; bottom:0; right:0; width:18px; height:18px; border-radius:50%; border:1px solid #ddd; background-color:#111; }
-    .equip-test{ width:24px; height:24px; border-radius:50%; background-color:#336699;  }
+.barbg{ background-color:#1e1e1e; }
+.statusbar{ background-color:#00ff00; }
+    .statusbar.normal{ background-color:#00ff00; }
+    .statusbar.warn{ background-color:#ff9900; }
+    .statusbar.danger{ background-color:#ff0000; }
 
-.bar{ background-color:#1e1e1e; }
-.statusbar{ height:100%; background-color:#00ff00; vertical-align:middle; }
-.statusbar.normal{ background-color:#00ff00; }
-.statusbar.warn{ background-color:#ff9900; }
-.statusbar.danger{ background-color:#ff0000; }
+.common{ min-width:450px; width:100%; height:100%; display:flex; flex-flow:row wrap; }
+.common > .resource{ flex-basis:100%; display:flex; flex-flow:row nowrap; height:25px; line-height:25px; background-color:rgba(33,33,33,1); }
+    .common > .resource > li{ text-indent:20px; background: url(../img/test.png) 2px 50% no-repeat; }
+    .common > .resource > li.L{ flex:1.5; }
+    .common > .resource > li.S{ flex:1; }
+    .dock-block{ flex:1; margin:0 1px; height:calc(100% - 26px); display:flex; flex-flow:row wrap; }
+    .dock-block.double{ flex:2; }
+    .dock-block > .caption{ flex-basis:100%; border-bottom:1px solid #999; height:25px; text-align:center; background-color:rgba(33,33,33,1); }
+    .dock-block > .caption.tab{ flex-basis:50%; }
+    .dock-block > .caption.tab.active{ border-color:#69f; color:#69f; }
+    .dock-block > .list{ flex-basis:100%; height:calc(100% - 27px); display:flex; flex-flow:row wrap; margin-top:1px; overflow:hidden; box-sizing:border-box; }
+    .dock-block > .list > li{ margin-top:1px; width:100%; background-color:#333; display:block; }
+    .dock-block > .list > li > span{ width:100%; height:50%; padding:0 5px; box-sizing:border-box; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; display:block; }
+    .dock-block > .list > li > span:nth-child(2){ text-align:right; }
+
+    .dock-block > .list.mission > li{ height:33%; }
+    .dock-block > .list.docks > li{ height:25%; }
+    .dock-block > .list.quest > li{ width: calc(50% - 1px); height:33%; margin-right:1px; }
+
+.addons{ width:100%; height:100%; }
+.addons > ul{ margin:10px 20px 20px 0; display:flex; flex-flow:row wrap; }
+.addons > ul > li { margin:10px 0 0 20px; }
+.addons a{ display:inline-block; outline:1px solid #666; text-decoration:none; color:#ddd; line-height:20px; padding:5px; background-color:#333; }
+.addons a:hover{ color:#39d; }
+.addons a.debugger{ width:20px; height:20px; text-align:center; }

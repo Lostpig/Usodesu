@@ -1,0 +1,27 @@
+<li class="ship-circle">
+    <div class="ccbar health">
+        <div class="bg"></div>
+        <div class="bar" style="transform:rotate({{circlelen(hpperc, 180)}}deg);">
+            <div class="statusbar {{barstyle(hpperc)}}"></div>
+        </div>
+    </div>
+    <div class="ccbar fuel">
+        <div class="bg"></div>
+        <div class="bar" style="transform:rotate({{circlelen(fuelperc, 90)}}deg);">
+            <div class="statusbar {{barstyle(fuelperc)}}"></div>
+        </div>
+    </div>
+    <div class="ccbar bullet">
+        <div class="bg"></div>
+        <div class="bar" style="transform:rotate({{circlelen(bulletperc, 90)}}deg);">
+            <div class="statusbar {{barstyle(bulletperc)}}"></div>
+        </div>
+    </div>
+    <div class="cccore">
+        <span class="level">{{level}}</span>
+        <span class="cond">{{cond}}</span>
+        <strong class="name">{{name}}</strong>
+        <strong class="hptext">{{hp}}/{{hpmax}}</strong>
+        <div ng-repeat="equip in equips"  class="slot e{{$index + 1}}" title="{{equip.base.name}}"></div>
+    </div>
+</li>

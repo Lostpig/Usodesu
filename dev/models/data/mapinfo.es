@@ -5,7 +5,7 @@ import Gene      from '../general';
 class Mapinfo extends BaseModel {
     constructor() {
         super();
-        this.modelname = 'Mapinfo';
+        this.modelname = 'MapInfo';
         this.addDependency(Maparea);
     }
     parse(map_item) {

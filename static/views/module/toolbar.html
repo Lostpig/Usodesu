@@ -1,0 +1,26 @@
+    <div class="menubutton" ng-class="{'active': menushow}" ng-click="menushow = !menushow"></div>
+    <div id="menu" ng-show="menushow">
+        <ul>
+            <li ng-class="{'active': app.showModuleName=='Decks'}" ng-click="app.showModuleName='Decks'">Decks</li>
+            <li ng-class="{'active': app.showModuleName=='Common'}" ng-click="app.showModuleName='Common'">Common</li>
+            <li ng-class="{'active': app.showModuleName=='Addons'}" ng-click="app.showModuleName='Addons'">Addons</li>
+            <li>N/A</li>
+            <li>N/A</li>
+        </ul>
+    </div>
+    <div class="info">
+        <span>{{player}}[{{rank}}]</span>
+        <span>lv.{{level}} next.{{exp}}</span>
+    </div>
+    <div class="dockscount">
+        <span>{{shipcount}}/{{shipslot}}</span>
+        <span>{{equipcount}}/{{equipslot}}</span>
+    </div>
+    <div class="buttons">
+        <a href="javascript:">+</a>
+        <a href="javascript:">+</a>
+        <a href="javascript:">+</a>
+        <a href="javascript:">+</a>
+        <a href="javascript:" ng-click="app.devtool($event)">D</a>
+        <a href="javascript:" ng-click="app.close()">X</a>
+    </div>

@@ -1,0 +1,6 @@
+<ul ng-controller="addonsCtrl">
+    <li ng-repeat="addon in addons">
+        <a href="javascript:" ng-click="OpenAddon(addon)">{{addon.title}}</a>
+        <a class="debugger" href="javascript:" ng-click="Debug(addon)">D</a>
+    </li>
+</ul>

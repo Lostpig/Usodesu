@@ -4,7 +4,7 @@ import Shipinfo  from '../data/shipinfo';
 class ConstructDock extends BaseModel {
     constructor() {
         super();
-        this.modelname = 'ConstractDock';
+        this.modelname = 'ConstructDock';
     }
     parse(api_data) {
         let dock = {

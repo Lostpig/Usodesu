@@ -1,0 +1,38 @@
+
+    <ul class="resource" ng-controller="resourceCtrl">
+        <li class="L">{{fuel}}</li>
+        <li class="L">{{bullet}}</li>
+        <li class="L">{{steel}}</li>
+        <li class="L">{{bauxite}}</li>
+        <li class="S">{{construct}}</li>
+        <li class="S">{{repair}}</li>
+        <li class="S">{{material}}</li>
+        <li class="S">{{remodel}}</li>
+    </ul>
+    <div class="dock-block" ng-controller="missionCtrl">
+        <strong class="caption">Mission</strong>
+        <ul class="list mission">
+            <li ng-repeat="mission in missions">
+                <span>{{mission.name}}</span>
+                <span>{{mission.aftertime}}</span>
+            </li>
+        </ul>
+    </div>
+    <div class="dock-block" ng-controller="repairdockCtrl">
+        <strong class="caption">Repair</strong>
+        <ul class="list docks">
+            <li ng-repeat="repair in repairDocks">
+                <span>{{repair.ship.shipinfo.name}}</span>
+                <span>{{repair.aftertime}}</span>
+            </li>
+        </ul>
+    </div>
+    <div class="dock-block double" ng-controller="questCtrl">
+        <strong class="caption">Quest</strong>
+        <ul class="list quest">
+            <li ng-repeat="quest in quests">
+                <span>{{quest.title}}</span>
+                <span>{{quest.state}}</span>
+            </li>
+        </ul>
+    </div>

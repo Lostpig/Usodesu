@@ -34,9 +34,6 @@ class Api extends EventEmitter {
             if(data.startsWith('svdata=')) { data = data.substring(7); }
 
             this.emit('response', path, reqbody.toString(), data);
-            //for(let i = 0; i < this.observer.length; i++) {
-            //    this.observer[i].push({path:path, request: reqbody.toString(), response: data});
-            //}
         }
         catch(e) {
             error(e);

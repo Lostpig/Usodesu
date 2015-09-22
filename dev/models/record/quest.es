@@ -7,7 +7,7 @@ class Quest extends BaseModel {
         this.modelname = 'Quest';
     }
     update(questlist) {
-        for(let [index, item] of questlist.list.entries()) {
+        for(let [index, item] of questlist.api_list.entries()) {
             this.set(item, index);
         }
     }
@@ -20,7 +20,7 @@ class Quest extends BaseModel {
             title   : qu.api_title,
             detail  : qu.api_detail,
             progress: qu.api_progress_flag
-        }
+        };
         return questinfo;
     }
 }

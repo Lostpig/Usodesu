@@ -1,0 +1,19 @@
+{
+    "name": "ShipList",
+    "version": "1.3.0",
+    "description": "Show detailed information of all owned ship girls ### Usage Put the folder into /path/to/poi/resources/app/plugins ### Change Log",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/poooi/plugin-ship-info.git"
+    },
+    "author": "Yunze",
+    "license": "MIT",
+    "homepage": "https://github.com/poooi/plugin-ship-info#readme",
+    "dependencies": {
+
+    }
+}

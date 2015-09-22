@@ -3,7 +3,7 @@ import BaseModel from '../base';
 class Shipinfo extends BaseModel {
     constructor() {
         super();
-        this.modelname = 'Equiptype';
+        this.modelname = 'EquipType';
     }
     parse(etype_item) {
         let equiptype = {

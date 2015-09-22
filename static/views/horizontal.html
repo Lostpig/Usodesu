@@ -1,12 +1,9 @@
-<div ng-include="'static/views/controller/toolbar.html'"></div>
+<div id="toolbar" ng-controller="toolbarCtrl" ng-include="'static/views/module/toolbar.html'"></div>
 <div id="content">
-    <div class="menu">
-        <div class="item active" ng-click="app.showModuleName='Decks'">Decks</div>
-        <div class="item">Common</div>
-        <div class="item">Other</div>
-        <div class="item">Setting</div>
-    </div>
-    <div class="board">
-        <div class="decks" ng-show="app.showModuleName=='Decks'" ng-controller="deckCtrl" ng-include="'static/views/controller/decks.html'"></div>
-    </div>
+    <div class="decks" ng-show="app.showModuleName=='Decks'" ng-controller="deckCtrl"
+        ng-include="'static/views/module/decks.html'"></div>
+    <div class="common" ng-show="app.showModuleName=='Common'"
+        ng-include="'static/views/module/common.html'"></div>
+    <div class="addons" ng-show="app.showModuleName=='Addons'"
+        ng-include="'static/views/module/addons.html'"></div>
 </div>

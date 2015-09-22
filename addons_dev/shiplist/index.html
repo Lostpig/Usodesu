@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>ship list</title>
+</head>
+<body ng-app="usodesu.shiplist">
+    <table ng-controller="shipsCtrl">
+        <tbody>
+            <tr ng-repeat="ship in ships">
+                <td>{{ship.name}}</td>
+                <td>{{ship.level}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <script src="../../static/angular/angular.min.js"></script>
+    <script>
+        require('./shiplist');
+    </script>
+</body>
+</html>

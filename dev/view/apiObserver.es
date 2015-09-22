@@ -1,11 +1,12 @@
 import models from '../models/models';
-let api = window.remote.require('./dist/libs/api');
+import remote from 'remote';
+let api = remote.require('./dist/libs/api');
 
 let
     watchList = {},
     doWatch = (md) => {
-        if(watchList[md.modelname] && watchList[md.modelname].length > 0) {
-            for (let method of watchList[md.modelname]) {
+        if(watchList[md.modelname] && watchList[md.modelname].list.length > 0) {
+            for (let method of watchList[md.modelname].list) {
                 method(md);
             }
         }
@@ -19,91 +20,122 @@ let
                     doWatch(md);
                 }
             },
+            trigger: {
+                configurable: false,
+                value       : () => {
+                    doWatch(md);
+                }
+            },
             model: {
                 configurable: false,
                 value       : md
             }
         });
+    },
+    updater = (modelname, update) => {
+        if(watchList[modelname]) { update(watchList[modelname].watcher); }
     };
-
-let
-    BasicInfo     = watcher(models.getrecord('basicinfo')),
-    Resource      = watcher(models.getrecord('resource')),
-    Quest         = watcher(models.getrecord('quest')),
-    ConstructDock = watcher(models.getrecord('constructdock')),
-    RepairDock    = watcher(models.getrecord('repairdock')),
-    Ships         = watcher(models.getrecord('ships')),
-    ShipDeck      = watcher(models.getrecord('shipdeck')),
-    Equips        = watcher(models.getrecord('equips'));
+/*let
+    BasicInfo     = watcher(models.get('BasicInfo')),
+    Resource      = watcher(models.get('Resource')),
+    Quest         = watcher(models.get('Quest')),
+    ConstructDock = watcher(models.get('ConstructDock')),
+    RepairDock    = watcher(models.get('RepairDock')),
+    Ships         = watcher(models.get('Ships')),
+    ShipDeck      = watcher(models.get('ShipDeck')),
+    Equips        = watcher(models.get('Equips'));
+*/
 
 let isStart = false;
 let triggerProcesser = {
     '/kcsapi/api_start2': (req, res) => {
         let apidata = res.api_data,
             pairsMap = [
-                {modelname: 'shiptype' , key: 'api_mst_stype'},
-                {modelname: 'shipinfo' , key: 'api_mst_ship'},
+                {modelname: 'ShipType' , key: 'api_mst_stype'},
+                {modelname: 'ShipInfo' , key: 'api_mst_ship'},
 
-                {modelname: 'equiptype', key: 'api_mst_slotitem_equiptype'},
-                {modelname: 'slotitem' , key: 'api_mst_slotitem'},
+                {modelname: 'EquipType', key: 'api_mst_slotitem_equiptype'},
+                {modelname: 'SlotItem' , key: 'api_mst_slotitem'},
 
-                {modelname: 'maparea'  , key: 'api_mst_maparea'},
-                {modelname: 'mapinfo'  , key: 'api_mst_mapinfo'},
-                {modelname: 'mapcell'  , key: 'api_mst_mapcell'},
+                {modelname: 'MapArea'  , key: 'api_mst_maparea'},
+                {modelname: 'MapInfo'  , key: 'api_mst_mapinfo'},
+                {modelname: 'MapCell'  , key: 'api_mst_mapcell'},
 
-                {modelname: 'mission'  , key: 'api_mst_mission'}
+                {modelname: 'Mission'  , key: 'api_mst_mission'}
             ];
 
         for(let pair of pairsMap) {
-            watcher(models.getdata(pair.modelname)).update(apidata[pair.key]);
+            watcher(models.get(pair.modelname)).update(apidata[pair.key]);
         }
 
         isStart = true;
     },
+
     '/kcsapi/api_get_member/basic': (req, res) => {
         let apidata = res.api_data;
-        BasicInfo.update(apidata);
+        updater('BasicInfo', (md) => { md.update(apidata); });
     },
     '/kcsapi/api_get_member/kdock': (req, res) => {
         let apidata = res.api_data;
-        ConstructDock.update(apidata);
+        updater('ConstructDock', (md) => { md.update(apidata); });
     },
     '/kcsapi/api_get_member/material': (req, res) => {
         let apidata = res.api_data;
-        Resource.update(apidata);
+        updater('Resource', (md) => { md.update(apidata); });
     },
     '/kcsapi/api_get_member/ndock': (req, res) => {
         let apidata = res.api_data;
-        RepairDock.update(apidata);
+        updater('RepairDock', (md) => { md.update(apidata); });
     },
     '/kcsapi/api_get_member/questlist': (req, res) => {
-
+        let apidata = res.api_data;
+        updater('Quest', (md) => { md.update(apidata); });
     },
     '/kcsapi/api_get_member/ship3': (req, res) => {
         let apidata = res.api_data;
-        Ships.update(apidata.api_ship_data);
-        ShipDeck.update(apidata.api_deck_data);
+        updater('Ships', (md) => { md.update(apidata.api_ship_data); });
+        updater('ShipDeck', (md) => { md.update(apidata.api_deck_data); });
     },
     '/kcsapi/api_get_member/ship_deck': (req, res) => {
         let apidata = res.api_data;
-        Ships.update(apidata.api_ship_data);
-        ShipDeck.update(apidata.api_deck_data);
+        updater('Ships', (md) => { md.update(apidata.api_ship_data); });
+        updater('ShipDeck', (md) => { md.update(apidata.api_deck_data); });
     },
     '/kcsapi/api_get_member/slot_item': (req, res) => {
         let apidata = res.api_data;
-        Equips.update(apidata);
+        updater('Equips', (md) => { md.update(apidata); });
     },
     '/kcsapi/api_get_member/unsetslot': (req, res) => {  },
 
     '/kcsapi/api_port/port': (req, res) => {
         let apidata = res.api_data;
-        BasicInfo.update(apidata.api_basic);
-        Resource.update(apidata.api_material);
+        updater('BasicInfo', (md) => { md.update(apidata.api_basic); });
+        updater('Resource', (md) => { md.update(apidata.api_material); });
 
-        Ships.update(apidata.api_ship);
+        updater('Ships', (md) => { md.update(apidata.api_ship); });
 
-        ShipDeck.update(apidata.api_deck_port);
-        RepairDock.update(apidata.api_ndock);
+        updater('ShipDeck', (md) => { md.update(apidata.api_deck_port); });
+        updater('RepairDock', (md) => { md.update(apidata.api_ndock); });
+    },
+
+    '/kcsapi/api_req_mission/start': (req, res) => {
+        let deckid = req.api_deck_id,
+            missionid = postBody.api_mission_id,
+            time = res.api_complatetime;
+
+        updater('ShipDeck', (md) => {
+            md.model.setMission(deckid, missionid, time);
+            md.trigger();
+        });
+    },
+    '/kcsapi/api_req_mission/return_instruction': (req, res) => {
+        let deckid = req.api_deck_id,
+            time = res.api_mission[2];
+
+        updater('ShipDeck', (md) => {
+            md.model.setMission(deckid, null, time);
+            md.trigger();
+        });
     }
 };
 
@@ -128,7 +160,7 @@ class Observer {
                 error('kancolle not start(not get start2)'); continue;
             }
             if(triggerProcesser[trigger.path] && typeof triggerProcesser[trigger.path] === 'function') {
-                let req       = trigger.request,  //JSON.parse(trigger.request),
+                let req       = trigger.request.length > 0 ? JSON.parse(trigger.request) : {},  //JSON.parse(trigger.request),
                     res       = JSON.parse(trigger.response),
                     processer = triggerProcesser[trigger.path];
                 processer(req, res);
@@ -138,17 +170,19 @@ class Observer {
     }
     watch(md, method) {
         if(!watchList[md.modelname]) {
-            watchList[md.modelname] = [];//new Set();
+            watchList[md.modelname] = { watcher: watcher(md), list: [] };
         }
-        watchList[md.modelname].push(method);
+        if(watchList[md.modelname].list.indexOf(method) < 0) {
+            watchList[md.modelname].list.push(method);
+        }
 
         return this;
     }
     unwatch(md, method) {
         if(watchList[md.modelname]) {
-            let index = watchList[md.modelname].indexOf(method);
+            let index = watchList[md.modelname].list.indexOf(method);
             if(index >= 0) {
-                watchList[md.modelname].splice(index, 1);
+                watchList[md.modelname].list.splice(index, 1);
             }
         }
 

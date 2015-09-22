@@ -18,7 +18,7 @@ let attrs = {
 class Basicinfo extends BaseModel {
     constructor() {
         super();
-        this.modelname = 'Basicinfo';
+        this.modelname = 'BasicInfo';
     }
     parse(item, key) {
         let attr = attrs[key],

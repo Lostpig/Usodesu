@@ -1,0 +1,13 @@
+
+    <ul class="tabs" ng-controller="deckstabCtrl">
+        <li class="deck" ng-class="{'selected': deck.id === selectedId }" ng-repeat="deck in decks" ng-click="change(deck.id)">{{deck.name}}</li>
+    </ul>
+    <ul class="summation" ng-controller="deckinfoCtrl">
+        <li>sum.{{sumlv}}</li>
+        <li>avg.{{avglv | number:0}}</li>
+        <li>range.{{scanrange | number:2}}</li>
+        <li title="base:{{airdomin.basic}},skil:{{airdomin.skill}}">AD.{{airdomin.total}}</li>
+    </ul>
+    <ul class="ships" ng-controller="deckinfoCtrl">
+        <uc-shipcircle ng-repeat="ship in ships" ship-data="ship"></uc-shipcircle>
+    </ul>

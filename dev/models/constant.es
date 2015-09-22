@@ -1,7 +1,12 @@
 const _C = {
     MapAreaType: {
-        'normal': 'normal area',
-        'event' : 'event area'
+        'normal': 'Normal_Area',
+        'event' : 'Event_Area'
+    },
+    MissionState: {
+        'none'    : 'No_Mission',
+        'doing'   : 'In_Mission',
+        'complate': 'Mission_Complate'
     }
 };
 

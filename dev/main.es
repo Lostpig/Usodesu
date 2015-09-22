@@ -2,7 +2,6 @@ import app           from 'app';
 import BrowserWindow from 'browser-window';
 import repoter       from 'crash-reporter';
 import path          from 'path';
-import ipc           from 'ipc';
 
 import Proxy from './libs/proxy';
 import {load, save, config} from './libs/config';
@@ -21,7 +20,6 @@ let run = () => {
     app.commandLine.appendSwitch('proxy-server', `127.0.0.1:${config.listenport}`);
     app.commandLine.appendSwitch('ignore-certificate-errors');
 
-    let mainWindow = global.mainWindow = null;
     app.on('window-all-closed', () => {
         if (process.platform !== 'darwin') {
             app.quit();
@@ -31,7 +29,7 @@ let run = () => {
     app.on('ready', function() {
         let screen = require('screen');
         let screenSize = screen.getPrimaryDisplay().workAreaSize;
-        mainWindow = new BrowserWindow({
+        let mainWindow = global.mainWindow = new BrowserWindow({
             'x'              : 0,
             'y'              : 0,
             'width'          : 800,
@@ -43,26 +41,17 @@ let run = () => {
                 'web-security': false
             }
         });
-        if (process.versions.electron >= '0.27.3') {
-            if (process.platform !== 'darwin') {
-                mainWindow.setMenu(null);
-            }
+        if (process.versions.electron >= '0.27.3' && process.platform !== 'darwin') {
+            mainWindow.setMenu(null);
         }
 
         mainWindow.loadUrl(`file://${DIRNAME}/index.html#horizonal`);
-        mainWindow.openDevTools({detach: true});
         mainWindow.on('closed', () => {
             mainWindow = null;
         });
-    });
 
-    ipc.on( 'app-quit', (event) => {
-        event.returnValue = true;
-        mainWindow.close();
-    });
-    ipc.on( 'app-minimize', (event) => {
-        event.returnValue = true;
-        mainWindow.minimize();
+        require('./libs/ipc');
+        //require('./libs/addons');
     });
 };
 
@@ -71,14 +60,16 @@ process.on('uncaughtException', (e) => {
     error(e);
 });
 
-load().then((cfg) => {
+load()
+.then((cfg) => {
     if(!cfg.cachefolder) {
         config.cachefolder = `${DIRNAME}/cache/`;
     }
     if(!cfg.sshotfolder) {
         config.sshotfolder = `${DIRNAME}/screenshot/`;
     }
-    save().then((success) => {
-        run();
-    });
+    return save();
+})
+.then((success) => {
+    run();
 });

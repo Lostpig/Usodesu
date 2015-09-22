@@ -5,6 +5,7 @@
     "scripts": {
         "dev": "gulp dev",
         "compile": "babel -d dist/ dev/ ",
+        "compaddons": "babel -d addons/ addons_dev/ ",
         "start": "electron ."
     },
     "main": "boot.js",

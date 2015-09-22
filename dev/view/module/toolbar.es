@@ -1,19 +1,20 @@
 let models   = window.models,
     observer = window.observer;
 
-let resource = models.getrecord('resource'),
-    basic    = models.getrecord('basicinfo'),
-    ships    = models.getrecord('ships'),
-    equips   = models.getrecord('equips');
+let resource = models.get('Resource'),
+    basic    = models.get('BasicInfo'),
+    ships    = models.get('Ships'),
+    equips   = models.get('Equips');
 
 let toolbar = angular.module('usodesu.toolbar', [])
 .controller('toolbarCtrl', ['$scope', ($scope) => {
     let self = this;
+    $scope.menushow = false;
     $scope.shipcount  = 0;
     $scope.equipcount = 0;
 
     observer
-    .watch(resource, (md) => {
+    .watch(resource, function updateResource (md) {
         $scope.fuel     = md.get('fuel');
         $scope.bullet   = md.get('bullet');
         $scope.steel    = md.get('steel');
@@ -25,7 +26,7 @@ let toolbar = angular.module('usodesu.toolbar', [])
 
         $scope.$apply();
     })
-    .watch(basic, (md) => {
+    .watch(basic, function updateBasicinfo (md) {
         $scope.player   = md.get('name');
         $scope.level    = md.get('level');
         $scope.rank     = md.get('rank');
@@ -35,11 +36,11 @@ let toolbar = angular.module('usodesu.toolbar', [])
 
         $scope.$apply();
     })
-    .watch(ships, (md) => {
+    .watch(ships, function updateShipcount (md) {
         $scope.shipcount = md.size;
         $scope.$apply();
     })
-    .watch(equips, (md) => {
+    .watch(equips, function updateEquipcount (md) {
         $scope.equipcount = md.size;
         $scope.$apply();
     });

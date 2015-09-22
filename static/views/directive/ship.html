@@ -1,0 +1,18 @@
+<li>
+    <div class="states">
+        <strong>{{name}}</strong>
+        <small>lv.{{level}} ({{needexp}})</small>
+        <span>cond.{{cond}}</span><span>{{hp}}/{{hpmax}}</span>
+    </div>
+    <div class="bars">
+        <div class="health bar"><div class="statusbar {{barstyle(hpperc)}}" style="width:{{hpperc}}%;"></div></div>
+        <div class="fuel bar"><div class="statusbar {{barstyle(fuelperc)}}" style="width:{{fuelperc}}%;"></div></div>
+        <div class="bullet bar"><div class="statusbar {{barstyle(bulletperc)}}" style="width:{{bulletperc}}%;"></div></div>
+    </div>
+    <div class="equips">
+        <div class="equip-slot" ng-repeat="equip in equips">
+            <div class="equip-test" title="{{equip.base.name}}"></div>
+            <sup class="aa" ng-show="equip.base.isplane">35</sup>
+        </div>
+    </div>
+</li>
